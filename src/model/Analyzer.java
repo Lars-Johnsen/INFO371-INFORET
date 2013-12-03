@@ -1,5 +1,10 @@
 package model;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+
 public class Analyzer {
 	
 
@@ -16,11 +21,11 @@ public class Analyzer {
 	    "through to too under up use very via want was way we well were " +
 	    "what when where which while who will with would yes yet you your";
 	
-	
+	 
 	
 	
 	public Analyzer(){
-		
+
 	}
 	public void findTermFrequency(){
 		
@@ -29,7 +34,46 @@ public class Analyzer {
 		
 		
 	}
+	public Map<String, Integer> tokenize(Text t){
+		
+		String[] StopWords = DEFAULT_STOPWORDS.split(" ");
+		ArrayList<String> stopArrayList = new ArrayList<String>(Arrays.asList(StopWords));
+		
+		
+		
+		Map<String, Integer> map = new HashMap<String, Integer>();
+		String[] tokens = t.getText().replace(",","")
+				.replace(".","")
+				.replace(";", "")
+				.replace("(", "")
+				.replace(")", "")
+				.replace("<", "")
+				.replace(">", "")
+				.replace("[", "")
+				.replace("]", "")
+				.replace("\"", "")
+				.replace('"', ' ')
+				.replace(":", "")
+				.toLowerCase()
+				.split(" ");
+		ArrayList<String> tokenArrayList = new ArrayList<String>(Arrays.asList(tokens));
+			
+		
+		for(String word: tokenArrayList){
+			if(!stopArrayList.contains(word)){
+				if(!map.containsKey(word)){
+					map.put(word.toLowerCase(), 0);
+				}
+				map.put(word, map.get(word)+1);
+			}
+			else{
+//				System.out.println("StoppOrd");
+//				System.out.println(word);
+			}
+	}
+		return map;
 	
 	
 	
+}
 }
