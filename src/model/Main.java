@@ -1,5 +1,6 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 import reader.FileReader;
@@ -11,25 +12,36 @@ public class Main {
 		
 		
 		
-		// TODO Auto-generated method stub
+		/**
+		 * Creates Filereader and analyzer.
+		 * Reads inn the document and analyze the tf value in analyzer.
+		 */
 		FileReader f = new FileReader();
-		Analyzer a = new Analyzer();
+		ArrayList<Text> docsToAnalyzer = new ArrayList<Text>();
 		
-		String[] filesToRead = new String[1];
+		String[] filesToRead = new String[3];
 		filesToRead[0] = "networks-book-ch14.pdf";
+		filesToRead[1] = "Bizer.pdf";
+		filesToRead[2] = "ldow.pdf";
+//		filesToRead[3] = "networks-book-ch23.pdf";
 		
-		
+		/**
+		 * Reads the selected documents and adds them to a list. 
+		 * 
+		 */
 		for(int i = 0; i < filesToRead.length; i++){
+	
 		Text t = f.readPDF(filesToRead[i]);
-		Map<String, Integer> map = a.tokenize(t);
-		
-		for(String s : map.keySet()){
-			System.out.println(s + " " + map.get(s));
+		docsToAnalyzer.add(t);
 		}
 		
+		/**
+		 * Creates an instanse of analyzer and sends the documents there
+		 */
+		Analyzer analyzer = new Analyzer(docsToAnalyzer);
 		
 //		System.out.println(t.getText());
 		
-		}
+		
 	}
 }
