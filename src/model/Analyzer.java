@@ -3,7 +3,6 @@ package model;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.LinkedHashSet;
 import java.util.Map;
 
 public class Analyzer {
@@ -43,30 +42,19 @@ public class Analyzer {
 		// First sends the docments to be tokenized. Then Stores Calculates the term frequency of the document
 		//Stores all the values regarding the document in the text class. 
 		for(Text text : textList){
-			//TODO
-			//Tokens er kontrollert! alt ser ok UT
+
 			ArrayList<String> tokens = tokenize(text);
 			text.setTokens(tokens);
 			text.setTfValues(findTermFrequency(tokens));
-			//						for(String s : text.getTfValues().keySet()){
-			//							System.out.println(s + " TF Value of: " + text.getTfValues().get(s));
-			//						}
+
 		}
 		findDocumentFrequency();
 		invertedDocumentFrequency();
-
 		calculateTFIDF();
 		for(Text ta : textList){
-			System.out.println("------------------------------------------------------");
 			ta.sortTfIDF();
-			System.out.println("------------------------------------------------------");
-
-
 		}
 	}
-
-
-
 
 	/**
 	 * Method for finding the term frequency of a term. 
@@ -79,8 +67,6 @@ public class Analyzer {
 		Map<String, Integer> map = new HashMap<String, Integer>();
 		String[] StopWords = DEFAULT_STOPWORDS.split(" ");
 		ArrayList<String> stopArrayList = new ArrayList<String>(Arrays.asList(StopWords));
-
-
 
 		for(String word: tokens){
 
@@ -99,17 +85,6 @@ public class Analyzer {
 		}
 		return map;
 	}
-	//		for(String s : map.keySet()){
-	//			System.out.println(s + " Has VAlue " + map.get(s));
-	//		}
-
-
-
-
-
-
-
-
 
 	/**
 	 * Method for finding the document frequency.
@@ -179,69 +154,48 @@ public class Analyzer {
 
 	}
 
-
-
-
-
-
 	public void addToTokenList(String token){
 		if(!tokenList.contains(token)){
 			tokenList.add(token);
 		}
 	}
 	/**
-	 * This Number is scaled by 100, because the maps cant tolerate double or floats.
+	 * This method finds the inverted document frequency. Divide the total number of documents by the document frequency.
 	 */
-
-
-
-
 
 	public void invertedDocumentFrequency(){
 		for(String s : documentFrequency.keySet()){
-			//						System.out.println("--------------------------------------");
-			//						System.out.println(documentFrequency.get(s));
 			Double inverted =   ((Math.log(textList.size() / documentFrequency.get(s))));
-			//						System.out.println(inverted);
 			InvertedDocumentFrequency.put(s, inverted);
-			//						System.out.println("--------------------------------------");
+
 		}
 	}
 	/**
-	 * Method for calculating tf-idf for each Term.
-	 * Not FINISHED!
+	 * Method for calculating tf-idf for each Term. Multiplying the term frequency and the inverted document frequency.
+	 *	
 	 */
-
-
-
-
 
 	public void calculateTFIDF(){
 
 		for (Text t :  textList){
 			Map<String, Double> tfIdfValues = new HashMap<String, Double>();
-			//TODO	
+			//	
 			Map<String, Integer> tf = t.getTfValues();
 			for(String s : tf.keySet()){
 				try{
 
-					Double tfidf = (double) tf.get(s) * (InvertedDocumentFrequency.get(s)); //Inverted was scaled by 100.
-										System.out.println("*********************************");
-										System.out.println("TF = " + tf.get(s));
-										System.out.println("TFIDF = " +tfidf);
-										System.out.println("IDF = " + InvertedDocumentFrequency.get(s));
-										System.out.println("*********************************");
+					Double tfidf = (double) tf.get(s) * (InvertedDocumentFrequency.get(s)); 
 					tfIdfValues.put(s,tfidf);
 				}
 				catch(NullPointerException e){
-					//					e.printStackTrace();
+					
 				}
 
 			}
 			t.setTfIdf(tfIdfValues);
 
 
-			//InvertedDocumentFrequency
+	
 
 		}
 

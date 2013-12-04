@@ -9,9 +9,6 @@ import reader.FileReader;
 
 public class Main {
 	public static void main(String[] args) {
-		
-		
-		
 		/**
 		 * Creates Filereader and analyzer.
 		 * Reads inn the document and analyze the tf value in analyzer.

@@ -2,7 +2,6 @@ package model;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import java.util.Map;
 
 import utils.Sorter;
@@ -20,17 +19,9 @@ public class Text {
 	private Map<String, Integer> tfValues;
 	private ArrayList<String> tokens;
 	private Map<String, Double> tfIdf;
-//	private ArrayList<String> tokenList;
 
 
-//	public ArrayList<String> getTokenList() {
-//		return tokenList;
-//	}
-//
-//	public void setTokenList(ArrayList<String> tokenList) {
-//		this.tokenList = tokenList;
-//	}
-
+	@SuppressWarnings("static-access")
 	public void sortTfIDF(){
 //		System.out.println(tfIdf.isEmpty());
 		Map<String, Double> sortedMap = new LinkedHashMap<String, Double>(tfIdf);
