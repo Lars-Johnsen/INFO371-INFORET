@@ -1,8 +1,11 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
+
+import utils.Sorter;
 
 /**
  * This class represents the texts. All relevant data stored here
@@ -15,15 +18,52 @@ import java.util.Map;
 public class Text {
 	private String text;
 	private Map<String, Integer> tfValues;
-	private LinkedHashSet<String> tokens;
+	private ArrayList<String> tokens;
+	private Map<String, Double> tfIdf;
+//	private ArrayList<String> tokenList;
+
+
+//	public ArrayList<String> getTokenList() {
+//		return tokenList;
+//	}
+//
+//	public void setTokenList(ArrayList<String> tokenList) {
+//		this.tokenList = tokenList;
+//	}
+
+	public void sortTfIDF(){
+//		System.out.println(tfIdf.isEmpty());
+		Map<String, Double> sortedMap = new LinkedHashMap<String, Double>(tfIdf);
+
+		Sorter sorter = new Sorter();
+		sortedMap = sorter.sortMapByValues(tfIdf);
+		for(String s  : sortedMap.keySet()){
+
+				System.out.println(s + " Value tfidf: " + sortedMap.get(s));
+//			}
+		}
 	
-	
-	public LinkedHashSet<String> getTokens() {
+		
+
+
+	}
+
+	public Map<String, Double> getTfIdf() {
+		return tfIdf;
+	}
+
+
+	public void setTfIdf(Map<String, Double> tfIdf) {
+		this.tfIdf = tfIdf;
+	}
+
+
+	public ArrayList<String> getTokens() {
 		return tokens;
 	}
 
 
-	public void setTokens(LinkedHashSet<String> tokens) {
+	public void setTokens(ArrayList<String> tokens) {
 		this.tokens = tokens;
 	}
 
