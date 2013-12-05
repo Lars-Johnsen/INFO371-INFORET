@@ -37,6 +37,8 @@ public class Main {
 		 */
 		Analyzer analyzer = new Analyzer(docsToAnalyzer);
 		
+		
+		
 //		System.out.println(t.getText());
 		
 		

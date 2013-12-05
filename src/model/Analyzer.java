@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import malletLda.Importer;
+
 public class Analyzer {
 	private ArrayList<String> tokenList;
 	private ArrayList<Text> textList;
@@ -54,6 +56,7 @@ public class Analyzer {
 		for(Text ta : textList){
 			ta.sortTfIDF();
 		}
+		
 	}
 
 	/**
