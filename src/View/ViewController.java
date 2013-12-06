@@ -17,14 +17,15 @@ public class ViewController implements ActionListener {
 
 	private JFileChooser     fileChooser  	= new JFileChooser("");
 	ArrayList<File> documentList = new ArrayList<File>();
+	ArrayList<Text> docsToAnalyzer = new ArrayList<Text>();
 	private Text text = new Text(null);
-
-	public ViewController() {
-
+	private View view;
+	public ViewController(View view) {
+		this.view = view;
 	}
 
 	private void openFile(File[] tempFiles) throws Exception {
-		ArrayList<Text> docsToAnalyzer = new ArrayList<Text>();
+		
 		ArrayList<String> filesToRead = new ArrayList<String>();
 		
 		FileReader fileReader = new FileReader();
@@ -37,7 +38,9 @@ public class ViewController implements ActionListener {
 			System.out.println("HHHHHHHHHHHHHHHHHHHHHHHHelvete");
 			Text t = fileReader.readPDF(filesToRead.get(integer));
 			docsToAnalyzer.add(t);
+			updateResultList();
 			System.out.println(docsToAnalyzer.size());
+			
 		}
 		
 		Analyzer analyzer = new Analyzer(docsToAnalyzer);
@@ -48,6 +51,7 @@ public class ViewController implements ActionListener {
 	 * Action Performed Method.
 	 */
 	public void actionPerformed(ActionEvent e) {
+		System.out.println("DU TRYKKE");
 		fileChooser.setFileFilter(new FileNameExtensionFilter("Text-files", "doc", "docx", "pdf"));
 		fileChooser.setMultiSelectionEnabled(true);
 		
@@ -59,11 +63,28 @@ public class ViewController implements ActionListener {
 				File[] tempFiles = fileChooser.getSelectedFiles();
 				try {
 					openFile(tempFiles);
+					
 				} catch (Exception excep) {
 					excep.printStackTrace();
 					System.exit(0);
+					
 				}
 			}
+		}
+		updateResultList();
+	}
+	
+	/**
+	 * Skal oppdatere listen virker ikke
+	 */
+	public void updateResultList(){
+		int counter = 0;
+		for(Text text : docsToAnalyzer){
+			System.out.println("Du er på riktig sted");
+			view.getResults().addElement(text);
+			view.repaint();	
+			view.validate();
+			counter++;
 		}
 	}
 }

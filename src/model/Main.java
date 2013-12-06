@@ -1,15 +1,12 @@
 package model;
 
-import java.util.ArrayList;
-import java.util.Map;
-
 import View.View;
-
-import reader.FileReader;
+import View.ViewController;
 
 
 
 public class Main {
+	
 	public static void main(String[] args) {
 		/**
 		 * Creates Filereader and analyzer.
@@ -42,7 +39,7 @@ public class Main {
 //		
 		
 //		System.out.println(t.getText());
-		
 		View view = new View();
+	
 	}
 }

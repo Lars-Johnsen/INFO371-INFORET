@@ -1,5 +1,8 @@
 package View;
 
+
+
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
@@ -33,7 +36,7 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 public class View extends JFrame {
-
+	private ViewController 			viewController = new ViewController(this);
 	private JPanel			northPanel = new JPanel();
 	private JPanel			northWestPanel = new JPanel();
 	private JPanel			northEastPanel = new JPanel();
@@ -75,13 +78,14 @@ public class View extends JFrame {
 
 
 
+	
 
 	private JLabel ArtistBioLabel = new JLabel("Bio:");
 	private JTextArea artistBioArea = new JTextArea(stringForTest);
 	private JPanel artistBioPanel = new JPanel();
-
-	private ViewController viewController = new ViewController();
-
+	
+	
+	
 	public JLabel getArtistBioLabel() {
 		return ArtistBioLabel;
 	}
