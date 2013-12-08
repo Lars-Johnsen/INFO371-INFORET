@@ -1,6 +1,8 @@
 package reader;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import model.Text;
 
@@ -21,6 +23,8 @@ public Text readPDF(String file){
 		PDFTextStripper stripper = new PDFTextStripper();
 		String input = stripper.getText(doc);
 		Text resultText = new Text(input);
+		
+		
 		return resultText;
 		
 	} catch (IOException e) {

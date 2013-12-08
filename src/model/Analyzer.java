@@ -1,5 +1,9 @@
 package model;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -16,16 +20,16 @@ public class Analyzer {
 
 	// this list is taken from the TextMine project
 	private static final String DEFAULT_STOPWORDS =  
-				"a about add ago after all also an and another any are as at be " +
-						"because been before being between big both but by came can come " +
-						"could did do does due each else end far few for from get got had " +
-						"has have he her here him himself his how if in into is it its " +
-						"just let lie like low make many me might more most much must " +
-						"my never no nor not now of off old on only or other our out over " +
-						"per pre put re said same see she should since so some still such " +
-						"take than that the their them then there these they this those " +
-						"through to too under up use very via want was way we well were " +
-						"what when where which while who will with would yes yet you your";
+			"a about add ago after all also an and another any are as at be " +
+					"because been before being between big both but by came can come " +
+					"could did do does due each else end far few for from get got had " +
+					"has have he her here him himself his how if in into is it its " +
+					"just let lie like low make many me might more most much must " +
+					"my never no nor not now of off old on only or other our out over " +
+					"per pre put re said same see she should since so some still such " +
+					"take than that the their them then there these they this those " +
+					"through to too under up use very via want was way we well were " +
+					"what when where which while who will with would yes yet you your";
 
 
 
@@ -54,9 +58,19 @@ public class Analyzer {
 		InvertedDocumentFrequency = invertedDocumentFrequency(textList, documentFrequency);
 		calculateTFIDF();
 		for(Text ta : textList){
-			
+
 			ta.sortTfIDF();
 		}
+//		try {
+//			calculateLDA();
+//		} catch (FileNotFoundException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		for(Text aaa : textList){
+//			aaa.printLdaMap();
+//		}
+		calculateCosineSimilarity(textList.get(0), textList.get(1));
 		
 
 	}
@@ -203,13 +217,35 @@ public class Analyzer {
 				Double tfidf = (double) tf.get(s) * (InvertedDocumentFrequency.get(s)); 
 				//					
 				tfIdfValues.put(s,tfidf);
-				
+
 			}
 
 			t.setTfIdf(tfIdfValues);
 
 		}
 
+
+	}
+	public void calculateLDA() throws FileNotFoundException{
+		for (Text t :  textList){
+			
+			PrintWriter out = new PrintWriter("haha.txt");
+			out.println(t.getText().replace("\n", " "));
+			out.close();
+			TopicModellingLDA lda = new TopicModellingLDA();
+			try {
+				t.setLdaMap(lda.lda(5, 8, 400, new File("haha.txt")));
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+	public void calculateCosineSimilarity(Text T1, Text T2){
+		CosineSimilarity cosim = new CosineSimilarity();
+		HashMap<String, Double> h1 = (HashMap<String, Double>) T1.getTfIdf();
+		HashMap<String, Double> h2 = (HashMap<String, Double>) T2.getTfIdf();
+		System.out.println(cosim.calculateCosineSimilarity(h1,h2));
 
 	}
 }
