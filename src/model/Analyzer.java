@@ -61,17 +61,17 @@ public class Analyzer {
 
 			ta.sortTfIDF();
 		}
-//		try {
-//			calculateLDA();
-//		} catch (FileNotFoundException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		for(Text aaa : textList){
-//			aaa.printLdaMap();
-//		}
-		calculateCosineSimilarity(textList.get(0), textList.get(1));
-		
+		//		try {
+		//			calculateLDA();
+		//		} catch (FileNotFoundException e) {
+		//			// TODO Auto-generated catch block
+		//			e.printStackTrace();
+		//		}
+		//		for(Text aaa : textList){
+		//			aaa.printLdaMap();
+		//		}
+		calculateCosineSimilarity(textList, "Wrong");
+
 
 	}
 
@@ -166,6 +166,7 @@ public class Analyzer {
 				//				.replace("7", "")
 				//				.replace("8", "")
 				//				.replace("9", "")
+
 				.toLowerCase()
 				.split(" ");
 		ArrayList<String> tokenHashSet = new ArrayList<String>(Arrays.asList(tokens));
@@ -194,8 +195,10 @@ public class Analyzer {
 	public Map<String, Double> invertedDocumentFrequency(ArrayList<Text> textList, Map<String, Integer> documentFrequency){
 		Map<String, Double> invertedDocFreq = new HashMap<String, Double>();
 		for(String s : documentFrequency.keySet()){
-			Double inverted =   ((Math.log10((textList.size() / documentFrequency.get(s)))));
-
+			double textListSize = textList.size();
+			double docFreq = documentFrequency.get(s);
+			double divided = textListSize/docFreq;
+			double inverted =   Math.log10(divided);
 			invertedDocFreq.put(s, inverted);
 
 		}
@@ -214,8 +217,7 @@ public class Analyzer {
 			Map<String, Integer> tf = t.getTfValues();
 			for(String s : tf.keySet()){
 
-				Double tfidf = (double) tf.get(s) * (InvertedDocumentFrequency.get(s)); 
-				//					
+				Double tfidf = (double) (tf.get(s) * (InvertedDocumentFrequency.get(s))); 
 				tfIdfValues.put(s,tfidf);
 
 			}
@@ -228,7 +230,7 @@ public class Analyzer {
 	}
 	public void calculateLDA() throws FileNotFoundException{
 		for (Text t :  textList){
-			
+
 			PrintWriter out = new PrintWriter("haha.txt");
 			out.println(t.getText().replace("\n", " "));
 			out.close();
@@ -241,11 +243,45 @@ public class Analyzer {
 			}
 		}
 	}
-	public void calculateCosineSimilarity(Text T1, Text T2){
+	public void calculateCosineSimilarity(ArrayList<Text> textCollection, String Query){
 		CosineSimilarity cosim = new CosineSimilarity();
-		HashMap<String, Double> h1 = (HashMap<String, Double>) T1.getTfIdf();
-		HashMap<String, Double> h2 = (HashMap<String, Double>) T2.getTfIdf();
-		System.out.println(cosim.calculateCosineSimilarity(h1,h2));
+		Text QueryText = new Text(Query);
+		ArrayList<String> QueryTokens = tokenize(QueryText);
+		
 
+		HashMap<String, Double> TfIdfQuery = new HashMap<String, Double>();
+		Map<String, Integer> TermFrequency = new HashMap<String, Integer>();
+		
+		String[] StopWords = DEFAULT_STOPWORDS.split(" ");
+		ArrayList<String> stopArrayList = new ArrayList<String>(Arrays.asList(StopWords));
+
+
+		for(String word: QueryTokens){
+
+			if(!stopArrayList.contains(word)){
+
+				if(!TermFrequency.containsKey(word)){
+
+
+					TermFrequency.put(word, 0);
+				}
+				TermFrequency.put(word, TermFrequency.get(word)+1);
+
+			}
+		}
+		for(String s: TermFrequency.keySet()){
+//			System.out.println("TERMFREQ = " + TermFrequency.get(s) + " " +s);
+//			System.out.println("InverseDocumentFreq " + InvertedDocumentFrequency.get(s) + " " +s);
+			double termFr = TermFrequency.get(s);
+			TfIdfQuery.put(s, (termFr * InvertedDocumentFrequency.get(s)));
+		}
+
+
+		for(Text t : textCollection){
+			HashMap<String, Double> h1 = (HashMap<String, Double>) t.getTfIdf();
+
+			System.out.println("COSIM " + cosim.calculateCosineSimilarity(h1,TfIdfQuery));
+
+		}
 	}
 }

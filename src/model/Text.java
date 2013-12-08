@@ -40,10 +40,10 @@ public class Text {
 
 		Sorter sorter = new Sorter();
 		sortedMap = sorter.sortMapByValues(tfIdf);
-				for(String s  : sortedMap.keySet()){
-		
-						System.out.println(s + " Value tfidf: " + sortedMap.get(s));
-					}
+//				for(String s  : sortedMap.keySet()){
+//		
+//						System.out.println(s + " Value tfidf: " + sortedMap.get(s));
+//					}
 
 
 
