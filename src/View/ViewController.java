@@ -35,7 +35,7 @@ public class ViewController implements ActionListener {
 		}
 
 		for(int integer = 0; integer < filesToRead.size(); integer++){
-			System.out.println("HHHHHHHHHHHHHHHHHHHHHHHHelvete");
+			
 			Text t = fileReader.readPDF(filesToRead.get(integer));
 			docsToAnalyzer.add(t);
 			updateResultList();
@@ -56,7 +56,7 @@ public class ViewController implements ActionListener {
 		fileChooser.setMultiSelectionEnabled(true);
 		
 		if(e.getSource() == View.getBrowseButton()){
-			System.out.println("BROWSE BUTTON");
+			
 			int returnVal = fileChooser.showOpenDialog(fileChooser);
 
 			if (returnVal == JFileChooser.APPROVE_OPTION) {
@@ -80,7 +80,7 @@ public class ViewController implements ActionListener {
 	public void updateResultList(){
 		int counter = 0;
 		for(Text text : docsToAnalyzer){
-			System.out.println("Du er på riktig sted");
+			
 			view.getResults().addElement(text);
 			view.repaint();	
 			view.validate();

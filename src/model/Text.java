@@ -23,7 +23,7 @@ public class Text {
 
 	@SuppressWarnings("static-access")
 	public void sortTfIDF(){
-		System.out.println(tfIdf.isEmpty());
+		
 		Map<String, Double> sortedMap = new LinkedHashMap<String, Double>(tfIdf);
 
 		Sorter sorter = new Sorter();

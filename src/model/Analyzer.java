@@ -16,17 +16,17 @@ public class Analyzer {
 
 
 	// this list is taken from the TextMine project
-	private static final String DEFAULT_STOPWORDS = 
-			"a about add ago after all also an and another any are as at be " +
-					"because been before being between big both but by came can come " +
-					"could did do does due each else end far few for from get got had " +
-					"has have he her here him himself his how if in into is it its " +
-					"just let lie like low make many me might more most much must " +
-					"my never no nor not now of off old on only or other our out over " +
-					"per pre put re said same see she should since so some still such " +
-					"take than that the their them then there these they this those " +
-					"through to too under up use very via want was way we well were " +
-					"what when where which while who will with would yes yet you your";
+	private static final String DEFAULT_STOPWORDS =  
+				"a about add ago after all also an and another any are as at be " +
+						"because been before being between big both but by came can come " +
+						"could did do does due each else end far few for from get got had " +
+						"has have he her here him himself his how if in into is it its " +
+						"just let lie like low make many me might more most much must " +
+						"my never no nor not now of off old on only or other our out over " +
+						"per pre put re said same see she should since so some still such " +
+						"take than that the their them then there these they this those " +
+						"through to too under up use very via want was way we well were " +
+						"what when where which while who will with would yes yet you your";
 
 
 
@@ -51,21 +51,15 @@ public class Analyzer {
 
 		}
 		findDocumentFrequency();
-		
-		invertedDocumentFrequency(textList, documentFrequency);
+
+		InvertedDocumentFrequency = invertedDocumentFrequency(textList, documentFrequency);
 		calculateTFIDF();
 		for(Text ta : textList){
-//			System.out.println(ta.getText());
+			
 			ta.sortTfIDF();
 		}
-//		System.out.println("lol");
-//		for(Text s : textList){
-//			for(String sa : s.getTfIdf().keySet()){
-//				System.out.println("lol<<<");
-//				System.out.println(sa+ s.getTfIdf().get(sa));
-//			}
-//		}
 		
+
 	}
 
 	/**
@@ -95,7 +89,7 @@ public class Analyzer {
 			//			
 
 		}
-		
+
 		return map;
 	}
 
@@ -115,11 +109,6 @@ public class Analyzer {
 				}
 			}
 		}
-
-//				for(String s : documentFrequency.keySet()){
-//								System.out.println(s + " " + documentFrequency.get(s));
-//				}
-
 	}
 
 
@@ -155,15 +144,15 @@ public class Analyzer {
 				.replace("?", "")
 				.replace("\n", "")
 				.replace("-", "")
-//				.replace("1", "")
-//				.replace("2", "")
-//				.replace("3", "")
-//				.replace("4", "")
-//				.replace("5", "")
-//				.replace("6", "")
-//				.replace("7", "")
-//				.replace("8", "")
-//				.replace("9", "")
+				//				.replace("1", "")
+				//				.replace("2", "")
+				//				.replace("3", "")
+				//				.replace("4", "")
+				//				.replace("5", "")
+				//				.replace("6", "")
+				//				.replace("7", "")
+				//				.replace("8", "")
+				//				.replace("9", "")
 				.toLowerCase()
 				.split(" ");
 		ArrayList<String> tokenHashSet = new ArrayList<String>(Arrays.asList(tokens));
@@ -192,8 +181,8 @@ public class Analyzer {
 	public Map<String, Double> invertedDocumentFrequency(ArrayList<Text> textList, Map<String, Integer> documentFrequency){
 		Map<String, Double> invertedDocFreq = new HashMap<String, Double>();
 		for(String s : documentFrequency.keySet()){
-			Double inverted =   ((Math.log(textList.size() / documentFrequency.get(s))));
-			System.out.println(inverted);
+			Double inverted =   ((Math.log10((textList.size() / documentFrequency.get(s)))));
+
 			invertedDocFreq.put(s, inverted);
 
 		}
@@ -211,21 +200,14 @@ public class Analyzer {
 			//	
 			Map<String, Integer> tf = t.getTfValues();
 			for(String s : tf.keySet()){
-				try{
 
-					Double tfidf = (double) tf.get(s) * (InvertedDocumentFrequency.get(s)); 
-					System.out.println(tfidf);
-					tfIdfValues.put(s,tfidf);
-				}
-				catch(NullPointerException e){
-					
-				}
-
+				Double tfidf = (double) tf.get(s) * (InvertedDocumentFrequency.get(s)); 
+				//					
+				tfIdfValues.put(s,tfidf);
+				
 			}
+
 			t.setTfIdf(tfIdfValues);
-
-
-	
 
 		}
 
