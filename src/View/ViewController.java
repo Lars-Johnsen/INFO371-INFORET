@@ -26,17 +26,19 @@ public class ViewController implements ActionListener {
 
 	private void openFile(File[] tempFiles) throws Exception {
 		
-		ArrayList<String> filesToRead = new ArrayList<String>();
+		ArrayList<File> filesToRead = new ArrayList<File>();
 		
 		FileReader fileReader = new FileReader();
 		
 		for(File file : tempFiles){
-			filesToRead.add(file.toString());
+			
+			filesToRead.add(file);
 		}
 
 		for(int integer = 0; integer < filesToRead.size(); integer++){
 			
-			Text t = fileReader.readPDF(filesToRead.get(integer));
+			Text t = fileReader.readPDF(filesToRead.get(integer).toString());
+			t.setName(filesToRead.get(integer).getName());
 			docsToAnalyzer.add(t);
 			updateResultList();
 			System.out.println(docsToAnalyzer.size());
@@ -61,6 +63,7 @@ public class ViewController implements ActionListener {
 
 			if (returnVal == JFileChooser.APPROVE_OPTION) {
 				File[] tempFiles = fileChooser.getSelectedFiles();
+				System.out.println(tempFiles);
 				try {
 					openFile(tempFiles);
 					

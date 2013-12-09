@@ -19,10 +19,12 @@ import utils.Sorter;
 
 public class Text {
 	private String text;
-	private Map<String, Integer> tfValues;
+	private Map<String, Double> tfValues;
 	private ArrayList<String> tokens;
 	private Map<String, Double> tfIdf;
 	private HashMap<Double, String> ldaMap;
+	private String name;
+	private int words;
 
 
 	public HashMap<Double, String> getLdaMap() {
@@ -39,7 +41,8 @@ public class Text {
 		Map<String, Double> sortedMap = new LinkedHashMap<String, Double>(tfIdf);
 
 		Sorter sorter = new Sorter();
-		sortedMap = sorter.sortMapByValues(tfIdf);
+		sortedMap = sorter.sortMapByValuesAscending(tfIdf);
+		
 //				for(String s  : sortedMap.keySet()){
 //		
 //						System.out.println(s + " Value tfidf: " + sortedMap.get(s));
@@ -71,12 +74,12 @@ public class Text {
 	}
 
 
-	public Map<String, Integer> getTfValues() {
+	public Map<String, Double> getTfValues() {
 		return tfValues;
 	}
 
 
-	public void setTfValues(Map<String, Integer> tfValues) {
+	public void setTfValues(Map<String, Double> tfValues) {
 		this.tfValues = tfValues;
 	}
 
@@ -101,5 +104,21 @@ public class Text {
 			System.out.println("Distribution :"+df.format(me.getKey()) +" Topic : "+ me.getValue());
 
 		}
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public int getWords() {
+		return words;
+	}
+
+	public void setWords(int words) {
+		this.words = words;
 	}
 }

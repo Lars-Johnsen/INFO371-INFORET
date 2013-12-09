@@ -4,10 +4,18 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.TreeMap;
+
+import utils.Sorter;
 
 
 public class Analyzer {
@@ -19,17 +27,18 @@ public class Analyzer {
 
 
 	// this list is taken from the TextMine project
-	private static final String DEFAULT_STOPWORDS =  
-			"a about add ago after all also an and another any are as at be " +
-					"because been before being between big both but by came can come " +
-					"could did do does due each else end far few for from get got had " +
-					"has have he her here him himself his how if in into is it its " +
-					"just let lie like low make many me might more most much must " +
-					"my never no nor not now of off old on only or other our out over " +
-					"per pre put re said same see she should since so some still such " +
-					"take than that the their them then there these they this those " +
-					"through to too under up use very via want was way we well were " +
-					"what when where which while who will with would yes yet you your";
+	private static final String DEFAULT_STOPWORDS =  "";
+
+	//			"a about add ago after all also an and another any are as at be " +
+	//					"because been before being between big both but by came can come " +
+	//					"could did do does due each else end far few for from get got had " +
+	//					"has have he her here him himself his how if in into is it its " +
+	//					"just let lie like low make many me might more most much must " +
+	//					"my never no nor not now of off old on only or other our out over " +
+	//					"per pre put re said same see she should since so some still such " +
+	//					"take than that the their them then there these they this those " +
+	//					"through to too under up use very via want was way we well were " +
+	//					"what when where which while who will with would yes yet you your";
 
 
 
@@ -50,6 +59,8 @@ public class Analyzer {
 
 			ArrayList<String> tokens = tokenize(text);
 			text.setTokens(tokens);
+			text.setWords(tokens.size());
+			System.out.println(text);
 			text.setTfValues(findTermFrequency(tokens));
 
 		}
@@ -70,8 +81,13 @@ public class Analyzer {
 		//		for(Text aaa : textList){
 		//			aaa.printLdaMap();
 		//		}
-		calculateCosineSimilarity(textList, "Wrong");
 
+
+		Set<Map.Entry<Text, Double>> set = calculateCosineSimilarity(textList, "life learning").entrySet();
+		for (Map.Entry<Text, Double> me : set) { 
+			System.out.println("Filnavn: "+me.getKey().getName() +" Value: "+ me.getValue());
+
+		}
 
 	}
 
@@ -81,14 +97,14 @@ public class Analyzer {
 	 * @param tokens
 	 * @return Map of the tokens with the number of times they appear.
 	 */
-	public Map<String, Integer> findTermFrequency(ArrayList<String> tokens){
+	public Map<String, Double> findTermFrequency(ArrayList<String> tokens){
 
 		Map<String, Integer> map = new HashMap<String, Integer>();
 		String[] StopWords = DEFAULT_STOPWORDS.split(" ");
 		ArrayList<String> stopArrayList = new ArrayList<String>(Arrays.asList(StopWords));
 
 		for(String word: tokens){
-
+			int i=0;
 			if(!stopArrayList.contains(word)){
 
 				if(!map.containsKey(word)){
@@ -96,14 +112,27 @@ public class Analyzer {
 					addToTokenList(word);
 					map.put(word, 0);
 				}
+
 				map.put(word, map.get(word)+1);
+				int lol = +map.get(word)+1;
+				System.out.println( word + " " +lol);
+
 
 			}
 			//			
 
 		}
-
-		return map;
+		Set<Entry<String, Integer>> set = map.entrySet(); 
+		Map<String, Double> map2 = new HashMap<String, Double>();
+		for (Map.Entry<String, Integer> me : set) { 
+			System.out.println("KEY  :"+me.getKey() +" VALUE : "+ me.getValue());
+			double value = me.getValue();
+			double antallOrd = tokens.size();
+			double snitt = value/antallOrd;
+			System.out.println(value +"/" + antallOrd + "=" +snitt);
+			map2.put(me.getKey(),snitt);
+		}
+		return map2;
 	}
 
 	/**
@@ -157,6 +186,7 @@ public class Analyzer {
 				.replace("?", "")
 				.replace("\n", "")
 				.replace("-", "")
+				.replace("\r", "")
 				//				.replace("1", "")
 				//				.replace("2", "")
 				//				.replace("3", "")
@@ -170,8 +200,6 @@ public class Analyzer {
 				.toLowerCase()
 				.split(" ");
 		ArrayList<String> tokenHashSet = new ArrayList<String>(Arrays.asList(tokens));
-
-
 
 		return tokenHashSet;
 
@@ -198,7 +226,7 @@ public class Analyzer {
 			double textListSize = textList.size();
 			double docFreq = documentFrequency.get(s);
 			double divided = textListSize/docFreq;
-			double inverted =   Math.log10(divided);
+			double inverted =   Math.log(divided);
 			invertedDocFreq.put(s, inverted);
 
 		}
@@ -212,13 +240,21 @@ public class Analyzer {
 	public void calculateTFIDF(){
 
 		for (Text t :  textList){
+			System.out.println(t);
 			Map<String, Double> tfIdfValues = new HashMap<String, Double>();
 			//	
-			Map<String, Integer> tf = t.getTfValues();
+			Map<String, Double> tf = t.getTfValues();
 			for(String s : tf.keySet()){
-
-				Double tfidf = (double) (tf.get(s) * (InvertedDocumentFrequency.get(s))); 
+				//				System.out.println(tf.get(s) + "dette er tf for " + s + ", som har dok " +t.getWords());
+				double realtf = tf.get(s);
+				Double tfidf =  (realtf * (0+InvertedDocumentFrequency.get(s))); 
 				tfIdfValues.put(s,tfidf);
+				System.out.println("----------------------------------------");
+				System.out.println("ORD: " + s );
+				System.out.println("TF :" + realtf);
+				System.out.println("IDF: " + (0+InvertedDocumentFrequency.get(s)));
+				System.out.println("TFIDF: " + tfidf);
+				System.out.println("----------------------------------------");
 
 			}
 
@@ -243,15 +279,15 @@ public class Analyzer {
 			}
 		}
 	}
-	public void calculateCosineSimilarity(ArrayList<Text> textCollection, String Query){
+	public HashMap<Text, Double> calculateCosineSimilarity(ArrayList<Text> textCollection, String Query){
 		CosineSimilarity cosim = new CosineSimilarity();
 		Text QueryText = new Text(Query);
 		ArrayList<String> QueryTokens = tokenize(QueryText);
-		
+
 
 		HashMap<String, Double> TfIdfQuery = new HashMap<String, Double>();
 		Map<String, Integer> TermFrequency = new HashMap<String, Integer>();
-		
+
 		String[] StopWords = DEFAULT_STOPWORDS.split(" ");
 		ArrayList<String> stopArrayList = new ArrayList<String>(Arrays.asList(StopWords));
 
@@ -269,19 +305,42 @@ public class Analyzer {
 
 			}
 		}
-		for(String s: TermFrequency.keySet()){
-//			System.out.println("TERMFREQ = " + TermFrequency.get(s) + " " +s);
-//			System.out.println("InverseDocumentFreq " + InvertedDocumentFrequency.get(s) + " " +s);
-			double termFr = TermFrequency.get(s);
-			TfIdfQuery.put(s, (termFr * InvertedDocumentFrequency.get(s)));
+
+		Set<Entry<String, Integer>> set = TermFrequency.entrySet(); 
+		Map<String, Double> map2 = new HashMap<String, Double>();
+		for (Map.Entry<String, Integer> me : set) { 
+			System.out.println("KEY  :"+me.getKey() +" VALUE : "+ me.getValue());
+			double value = me.getValue();
+			double antallOrd = QueryTokens.size();
+			double snitt = value/antallOrd;
+			System.out.println(value +"/" + antallOrd + "=" +snitt);
+			map2.put(me.getKey(),snitt);
+		}
+		for(String s: map2.keySet()){
+			double termFr = map2.get(s);
+			double idf =0;
+			try {
+				idf = 0 + InvertedDocumentFrequency.get(s);			
+
+			} catch (NullPointerException e) {
+				idf=0;
+			}
+			System.out.println(s +" " + idf + " idf");
+			double tfIdf = termFr * idf;
+			System.out.println(s +" " + tfIdf + " tfidf");
+			TfIdfQuery.put(s, (tfIdf));
+
 		}
 
-
+		HashMap<Text, Double> map = new HashMap<Text, Double>();
 		for(Text t : textCollection){
 			HashMap<String, Double> h1 = (HashMap<String, Double>) t.getTfIdf();
-
-			System.out.println("COSIM " + cosim.calculateCosineSimilarity(h1,TfIdfQuery));
-
+			map.put(t, cosim.calculateCosineSimilarity(h1,TfIdfQuery));
 		}
+
+
+		HashMap<Text, Double> map1 = (HashMap<Text, Double>) Sorter.sortMapByValuesDescending(map);
+		QueryText.setTfIdf(TfIdfQuery);
+		return map1;
 	}
 }
