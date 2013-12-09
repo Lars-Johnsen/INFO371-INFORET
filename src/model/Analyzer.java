@@ -60,7 +60,6 @@ public class Analyzer {
 			ArrayList<String> tokens = tokenize(text);
 			text.setTokens(tokens);
 			text.setWords(tokens.size());
-			System.out.println(text);
 			text.setTfValues(findTermFrequency(tokens));
 
 		}
@@ -72,23 +71,10 @@ public class Analyzer {
 
 			ta.sortTfIDF();
 		}
-		//		try {
-		//			calculateLDA();
-		//		} catch (FileNotFoundException e) {
-		//			// TODO Auto-generated catch block
-		//			e.printStackTrace();
-		//		}
-		//		for(Text aaa : textList){
-		//			aaa.printLdaMap();
-		//		}
-
-
 		Set<Map.Entry<Text, Double>> set = calculateCosineSimilarity(textList, "life learning").entrySet();
 		for (Map.Entry<Text, Double> me : set) { 
 			System.out.println("Filnavn: "+me.getKey().getName() +" Value: "+ me.getValue());
-
 		}
-
 	}
 
 	/**
@@ -115,21 +101,16 @@ public class Analyzer {
 
 				map.put(word, map.get(word)+1);
 				int lol = +map.get(word)+1;
-				System.out.println( word + " " +lol);
 
 
 			}
-			//			
-
 		}
 		Set<Entry<String, Integer>> set = map.entrySet(); 
 		Map<String, Double> map2 = new HashMap<String, Double>();
 		for (Map.Entry<String, Integer> me : set) { 
-			System.out.println("KEY  :"+me.getKey() +" VALUE : "+ me.getValue());
 			double value = me.getValue();
 			double antallOrd = tokens.size();
 			double snitt = value/antallOrd;
-			System.out.println(value +"/" + antallOrd + "=" +snitt);
 			map2.put(me.getKey(),snitt);
 		}
 		return map2;
@@ -152,15 +133,6 @@ public class Analyzer {
 			}
 		}
 	}
-
-
-
-
-
-
-
-
-
 
 	/**
 	 * Method for tokenization of the texts. Removes special characters and splits the words based on 
@@ -208,7 +180,6 @@ public class Analyzer {
 		 * For use in analyzing	
 		 */
 
-
 	}
 
 	public void addToTokenList(String token){
@@ -240,21 +211,15 @@ public class Analyzer {
 	public void calculateTFIDF(){
 
 		for (Text t :  textList){
-			System.out.println(t);
 			Map<String, Double> tfIdfValues = new HashMap<String, Double>();
 			//	
 			Map<String, Double> tf = t.getTfValues();
 			for(String s : tf.keySet()){
-				//				System.out.println(tf.get(s) + "dette er tf for " + s + ", som har dok " +t.getWords());
+
 				double realtf = tf.get(s);
 				Double tfidf =  (realtf * (0+InvertedDocumentFrequency.get(s))); 
 				tfIdfValues.put(s,tfidf);
-				System.out.println("----------------------------------------");
-				System.out.println("ORD: " + s );
-				System.out.println("TF :" + realtf);
-				System.out.println("IDF: " + (0+InvertedDocumentFrequency.get(s)));
-				System.out.println("TFIDF: " + tfidf);
-				System.out.println("----------------------------------------");
+
 
 			}
 
@@ -309,11 +274,11 @@ public class Analyzer {
 		Set<Entry<String, Integer>> set = TermFrequency.entrySet(); 
 		Map<String, Double> map2 = new HashMap<String, Double>();
 		for (Map.Entry<String, Integer> me : set) { 
-			System.out.println("KEY  :"+me.getKey() +" VALUE : "+ me.getValue());
+
 			double value = me.getValue();
 			double antallOrd = QueryTokens.size();
 			double snitt = value/antallOrd;
-			System.out.println(value +"/" + antallOrd + "=" +snitt);
+
 			map2.put(me.getKey(),snitt);
 		}
 		for(String s: map2.keySet()){
@@ -325,9 +290,7 @@ public class Analyzer {
 			} catch (NullPointerException e) {
 				idf=0;
 			}
-			System.out.println(s +" " + idf + " idf");
 			double tfIdf = termFr * idf;
-			System.out.println(s +" " + tfIdf + " tfidf");
 			TfIdfQuery.put(s, (tfIdf));
 
 		}
